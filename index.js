@@ -8,6 +8,9 @@ const connection = require("./database/database")
 const CategoriesController = require("./components/user/categories/CategoriesController")
 const ArticlesController = require("./components/user/articles/ArticlesController")
 
+const Article = require("./components/user/articles/Article")
+const Category = require("./components/user/categories/Category")
+
 connection.authenticate()
     .then(() =>{
         console.log('Connection has been established successfully.');
@@ -31,6 +34,9 @@ app.use(bodyParser.json())
 
 app.get("/", (req, res) =>{
     res.send("Welcome to my site")
+})
+app.get("/testindex", (req, res) =>{
+    res.render("index")
 })
 
 app.listen(8080, () => {

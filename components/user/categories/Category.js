@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize")
-const connection = require("./database")
+const connection = require("../../../database/database")
 
 
 const Category = connection.define('categories',{
@@ -13,10 +13,11 @@ const Category = connection.define('categories',{
     }
 })
 
-Category.sync({force: false})
-    .then(() => {
-    console.log("Created table Category")
-    })
+// Category.sync({force: false})
+//     .then(() => {
+//     console.log("Created table Category")
+//     })
 
+// Category.sync({force: true})
 
 module.exports = Category
