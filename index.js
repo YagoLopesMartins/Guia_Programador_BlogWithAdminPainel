@@ -1,15 +1,15 @@
 const express = require("express")
-const app = express()
 
 const bodyParser = require("body-parser")
 const connection = require("./database/database")
-
 
 const CategoriesController = require("./components/user/categories/CategoriesController")
 const ArticlesController = require("./components/user/articles/ArticlesController")
 
 const Article = require("./components/user/articles/Article")
 const Category = require("./components/user/categories/Category")
+
+const app = express()
 
 connection.authenticate()
     .then(() =>{
@@ -29,7 +29,7 @@ app.set('view engine', 'ejs')
 app.use(express.static('public'))
 
 // Body parser 
-app.use(bodyParser.urlencoded({ extended: false}))
+app.use(bodyParser.urlencoded({ extended: true}))
 app.use(bodyParser.json())
 
 app.get("/", (req, res) =>{
