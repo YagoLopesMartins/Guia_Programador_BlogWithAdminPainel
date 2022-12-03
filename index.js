@@ -39,7 +39,10 @@ app.get("/", (req, res) =>{
         ]
     })
     .then(articles => {
-        res.render("index", { articles: articles})
+        Category.findAll()
+        .then(categories =>{
+            res.render("index", { articles: articles, categories: categories})
+        })
     })
 })
 
@@ -52,16 +55,39 @@ app.get("/:slug", (req, res)=>{
         }
     }).then(article => {
         if(article != undefined){
-            res.render("article", { article: article})
+            Category.findAll()
+                .then(categories =>{
+                    res.render("article", { article: article, categories: categories})
+                })
         }else{
             res.redirect("/")
         }
     }).catch((error) => {
         console.error('Error:', error);
     })
-
-
 })
+
+app.get("/category/:slug", (req, res)=>{
+    var slug = req.params.slug
+
+    Category.findOne({
+        where: {
+            slug: slug
+        },
+        include: [{ model: Article}]
+    }).then(category => {
+        if(category != undefined){
+            Category.findAll()
+                .then(categories =>{
+                    res.render("index", { articles: category.articles, categories: categories})
+                })
+        }else{
+            res.redirect("/")
+        }
+    }).catch((error) => {
+        console.error('Error:', error);
+    })
+})    
 
 app.get("/testindex", (req, res) =>{
     res.send("testindex")
