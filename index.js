@@ -3,11 +3,11 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const connection = require("./database/database")
 
-const CategoriesController = require("./components/user/categories/CategoriesController")
-const ArticlesController = require("./components/user/articles/ArticlesController")
+const CategoriesController = require("./categories/CategoriesController")
+const ArticlesController = require("./articles/ArticlesController")
 
-const Article = require("./components/user/articles/Article")
-const Category = require("./components/user/categories/Category")
+const Article = require("./articles/Article")
+const Category = require("./categories/Category")
 
 const app = express()
 
@@ -30,13 +30,41 @@ app.use(express.static('public'))
 
 // Body parser 
 app.use(bodyParser.urlencoded({ extended: true}))
-app.use(bodyParser.json())
+app.use(bodyParser.json({ extended: true}))
 
 app.get("/", (req, res) =>{
-    res.send("Welcome to my site")
+    Article.findAll({
+        order:[
+            ['id', 'DESC']
+        ]
+    })
+    .then(articles => {
+        res.render("index", { articles: articles})
+    })
 })
+
+app.get("/:slug", (req, res)=>{
+    var slug = req.params.slug
+
+    Article.findOne({
+        where: {
+            slug: slug
+        }
+    }).then(article => {
+        if(article != undefined){
+            res.render("article", { article: article})
+        }else{
+            res.redirect("/")
+        }
+    }).catch((error) => {
+        console.error('Error:', error);
+    })
+
+
+})
+
 app.get("/testindex", (req, res) =>{
-    res.render("index")
+    res.send("testindex")
 })
 
 app.listen(8080, () => {

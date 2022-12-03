@@ -6,12 +6,21 @@
         <hr>
         <div class="card">
             <div class="card-header">
-                <h2>Cadastro de categorias</h2>
+                <h2>Novo artigo</h2>
             </div>
             <div class="card-body">
-                <form action="/categories/save" method="POST">
-                    <input type="text" name="title" class="form-control" placeholder="Ex.: Frutas" id="title" onclick="capturar()">
+                <form action="/articles/save" method="POST">
+                    <input type="text" name="title" class="form-control" placeholder="Ex.: Frutas">
                     <br>
+                    <textarea class="form-control"  name="body" id="article" cols="30" rows="10"></textarea>
+                    <br>
+                    <label>Categoria</label>
+                    <select name="category" class="form-control">
+                        <% categories.forEach((category) => { %>
+                            <option value="<%= category.id %>"><%= category.title %></option>
+                        <% }) %>
+                    </select>
+                    <br> 
                     <button type="submit" class="btn btn-primary">Cadastrar</button>
                 </form>
             </div>
@@ -20,13 +29,12 @@
 
 
 <%- include('../../partials/footer') %>
-
+<script src="/tinymce/tinymce.min.js"></script>
 <script>
-    var capturando = "";
-
-    function capturar () {
-        capturando = document.getElementById('title').value;
-        console.log(capturando);
-    }
+    tynymce.init({
+        selector: "#article",
+        plugins: [
+            'advlist', 'autolink','link','image', 'lists','print','preview','hr','searchreplace', 'wordcount'
+        ]
+    })
 </script>
- 
