@@ -6,7 +6,9 @@ const router = express.Router()
 const Article = require("./Article")
 const Category = require("../categories/Category")
 
-router.get("/admin/articles", (req, res) =>{
+const adminAuth = require("../middlewares/adminAuth")
+
+router.get("/admin/articles", adminAuth, (req, res) =>{
 
         Article.findAll({
             include: [{
