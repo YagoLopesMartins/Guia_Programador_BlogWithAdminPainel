@@ -1,6 +1,8 @@
 const express = require("express")
 
 const bodyParser = require("body-parser")
+const session = require("express-session")
+
 const connection = require("./database/database")
 
 const CategoriesController = require("./categories/CategoriesController")
@@ -25,8 +27,34 @@ app.use("/categories", CategoriesController)
 app.use("/articles", ArticlesController)
 app.use("/users", UsersController)
 
+app.get("/session", (req, res) => {
+    req.session.treinamento = "Formação"
+    req.session.ano = 2019
+    req.session.user = {
+        username: "dcdc",
+        email: "sdd",
+        id:10
+    }
+    res.send("Sessao gerada!")
+})
+app.get("/leitra/session", (req, res) =>{
+    res.json({
+        treinamento: req.session.treinamento,
+        ano: req.session.ano = 2019,
+        user: req.session.user
+    })
+})
+
 // View engine
 app.set('view engine', 'ejs')
+
+// Sessions
+app.use(session({
+    secret: "zxcçzçlxcçldç~ldlsçlsdflç~sldfls~kdfksdfç",
+    cookie: {
+        maxAge: 30000 // 3 seg
+    }
+}))
 
 // Static files
 app.use(express.static('public'))
