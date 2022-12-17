@@ -53,67 +53,32 @@ router.get("/admin/users", (req, res) =>{
     )
 })
 
-router.post("/delete", (req, res) =>{
-    var id = req.body.id
+router.get("/login", (req, res) =>{
+    res.render("admin/users/login")
+})
 
-    if(id != undefined){
+router.post("/authenticate", (req, res) => {
+    var email = req.body.email;
+    var password = req.body.password;
 
-        if(!isNaN(id)){
-            Category.destroy({
-                where: {
-                    id: id
+    User.findOne({ where: { email: email}}).then(user =>{
+        if(user != undefined){
+            var correct = bcrypt.compareSync(password, user.password)
+
+            if(correct){
+                req.session.user = {
+                    id: user.id,
+                    email: user.email
                 }
-            }).then(()=>{
-                res.redirect("/admin/categories")
-            }).catch((error) => {
-                console.error('Error: ', error);
-            })
-        }else{
-            res.redirect("/admin/categories")
-        }
-    }else{
-        res.redirect("/admin/categories")
-    }
-})
-
-router.get("/admin/categories/edit/:id", (req, res) =>{
-
-    var id = req.params.id
-
-    if(isNaN(id)){
-        res.redirect("/admin/categories")
-    }
-
-    Category.findByPk(id)
-        .then(category => {
-            if(category != undefined){
-                res.render("admin/categories/edit", {
-                    category: category
-                })
+                res.json(req.session.user)
             }else{
-                res.redirect("/admin/categories")
+                res.redirect("/login")
             }
-        })
-        .catch((error) => {
-            console.error('Error: ', error);
-        })
-})
 
-router.post("/update", (req, res) => {
-    var id = req.body.id
-    var title = req.body.title
-
-    Category.update({ 
-        title: title,
-        slug: slugify(title)
-    },{
-        where: {
-            id: id
+        }else{
+            res.redirect("/login")
         }
-    }).then(() => {
-        res.redirect("/admin/categories")
     })
 })
-
 
 module.exports = router

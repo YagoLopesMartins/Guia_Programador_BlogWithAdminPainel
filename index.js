@@ -48,11 +48,13 @@ app.get("/leitra/session", (req, res) =>{
 // View engine
 app.set('view engine', 'ejs')
 
+// Redis database for sessions
+
 // Sessions
 app.use(session({
     secret: "zxcçzçlxcçldç~ldlsçlsdflç~sldfls~kdfksdfç",
     cookie: {
-        maxAge: 30000 // 3 seg
+        maxAge: 300000 // 3 seg
     }
 }))
 
